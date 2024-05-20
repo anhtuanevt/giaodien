@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+	<title> Front end</title>
+	<meta charset="utf-8">
+
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<%- include('./elements/css.ejs') %>
+
+</head>
+<body>	
+
+	<!-- Container -->
+	<div id="container">
+
+		<!-- Header
+		    ================================================== -->
+			<%- include('./elements/header.ejs') %>
+		<!-- End Header -->
+		<%- body %>
+
+		<!-- feature-video-section 
+			================================================== -->
+			<%- include('./elements/feature-video-section.ejs') %>
+		<!-- End feature-video-section -->
+
+		<!-- footer 
+			================================================== -->
+			<%- include('./elements/footer.ejs') %>
+		<!-- End footer -->
+
+	</div>
+	<!-- End Container -->
+	
+	<%- include('./elements/script.ejs') %>
+</body>
+</html>

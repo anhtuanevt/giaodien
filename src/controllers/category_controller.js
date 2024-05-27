@@ -1,7 +1,6 @@
 
 const categoryService = require('../services/category_service');
-const ErrorResponse = require('../core/error.response');
-const e = require('express');
+const statusCode = require('../core/status.code');
 const linkChangStatus = '/admin/category/update-single-status'
 
 module.exports = {
@@ -38,17 +37,14 @@ module.exports = {
         const data = req.body
         console.log('data', data)
         try {
-         const result = await categoryService.addCategory(data);
-         if(result._id) {
-            // res.flash('success', 'Add category success')
-            res.send({
-                success: true,
-                result
-            })
-         }
+            const result = await categoryService.addCategory(data);
+            if(result._id) {
+                req.flash('success', 'Category updated successfully!',false);
+                res.redirect('/admin/category');
+            } 
         } catch (error) {
-            console.log(error)
             res.send(error)
+            console.log(error)
         }
     },
 
@@ -59,11 +55,7 @@ module.exports = {
         console.log('date', data, categoryId)
         try {
             const result = await categoryService.updateCategoryById(categoryId, data);
-            // if(result._id) res.redirect('/admin/category')
-            res.send({
-                success: true,
-                result
-            })
+            if(result._id) res.redirect('/admin/category')
         } catch (error) {
             res.send(error)
         }

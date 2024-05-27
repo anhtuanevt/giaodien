@@ -4,10 +4,10 @@ const linkPrefix='admin/category' ;
 const linkThumb='' ; 
 %>
     <div class="card card-info card-outline" >
-        <form action='<%= linkPrefix%>/form' data-id="<%= category._id %>" method="POST" class="mb-0" id="submit-data-form" enctype="multipart/form-data">
+        <form action='<%= linkPrefix%>/form/<%= category._id %>' data-id="<%= category._id %>" method="POST" class="mb-0" id="submit-data-form">
             <div class="card-body">
                 <h1>
-                    Add - Form - Category
+                    Add - Form - category
                 </h1>
                 <div class="form-group row">
                     <label for="name" class="col-sm-2 col-form-label text-sm-right required">Name</label>
@@ -38,7 +38,7 @@ const linkThumb='' ;
             </div>
             <div class="card-footer">
                 <div class="col-12 col-sm-8 offset-sm-2">
-                    <button type="submit" class="btn btn-sm btn-success mr-1" onclick="submitCategoryForm(event, '<%=linkPrefix%>','<%= category._id %>')">
+                    <button type="submit" class="btn btn-sm btn-success mr-1">
                         Submit</button>
                     <a href="/admin/<%=collection%>" class="btn btn-sm btn-danger mr-1">
                         Cancel</a>

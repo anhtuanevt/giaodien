@@ -11,17 +11,13 @@ module.exports = {
         try {
             data.is_home = (data.is_home) ? true : false;
             data.is_hot = (data.is_hot) ? true : false;
+            data.thumbnail = thumbnail
 
-            let result = await cloudinary.uploader.upload(thumbnail.path, {
-                folder: 'thumbnail',
-                public_id: thumbnail.filename,
-            } )
-
-            data.thumbnail = result.url
             const newArticle = await articleModel.create(data);
             await categoryModel.findByIdAndUpdate(data.category_id, {
                 $push: { article_id: newArticle._id }
             });
+            await articleModel.findByIdAndUpdate(newArticle.id, {thumbnail : thumbnail})
             return newArticle;
         } catch (e) {
             console.log(e);
@@ -33,18 +29,11 @@ module.exports = {
         return await articleModel.findById(articleId)
     },
 
-    updateArticleById :  async (articleId, data, thumbnail) => {
+    updateArticleById :  async (articleId, data, thumbnail, currentThumbnail) => {
         data.is_hot = (data.is_hot) ? true : false;
         data.is_home = (data.is_home) ? true : false;
-        // xu li upload hinh => tra ra thumbnail url => goi ham update ? 
-        if(thumbnail){
-            let result = await cloudinary.uploader.upload(thumbnail.path, {
-                folder: 'thumbnail',
-                public_id: thumbnail.filename,
-            } )
-            data.thumbnail = result.url
-        }
-        return updateArticle = await articleModel.findByIdAndUpdate(articleId, data, { new: true })
+        data.thumbnail = thumbnail ? thumbnail.path : currentThumbnail
+       return await articleModel.findByIdAndUpdate(articleId, data, { new: true })
     },
 
     deleteArticleById :  async (articleId) => {

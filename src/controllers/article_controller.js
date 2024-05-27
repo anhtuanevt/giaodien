@@ -1,6 +1,6 @@
 
 const articleService = require('../services/article_service');
- 
+
 module.exports = {
     getArticle : async(req, res, next) => {
         const articles = await articleService.getArticleList();
@@ -22,16 +22,15 @@ module.exports = {
         
     },
 
-     addArticle : async (req , res , next) => {
-        const data = req.body
-        const thumbnail = req.file
-        console.log('data article', thumbnail)
-        try {
+    addArticle : async (req , res , next) => {
+        const data = req.body;
+        const thumbnail = req.file.path
+    try {   
             const result = await articleService.addArticle(data, thumbnail);
-            res.send({
-                success: true,
-                result
-            })
+            if(result._id){
+                req.flash('success', 'Article updated successfully!',false);
+                res.redirect('/admin/article');
+            }
         } catch (error) {
             console.log('error', error)
             res.send(error)
@@ -42,21 +41,15 @@ module.exports = {
         const articleId = req.params.id;
         const data = req.body
         const thumbnail = req.file
-        console.log('data', data)
         try {
             const currentArticle = await articleService.getArticleById(articleId)
-            console.log('currentArticle', currentArticle)
             if (currentArticle.category_id !== data.category_id) {
                 await categoryModel.findByIdAndUpdate(data.category_id, {
                     $set: { articles_id: articleId }
                 });
             }
-            const result = await articleService.updateArticleById(articleId, data, thumbnail);
-            console.log('result', result)  
-            res.send({
-                success: true,
-                result
-            })
+            const result = await articleService.updateArticleById(articleId, data, thumbnail, currentArticle.thumbnail);
+            if(result) res.redirect('/admin/article')
         } catch (error) {
             console.log('error', error) 
             res.send(error)
@@ -92,16 +85,21 @@ module.exports = {
         }
     },
 
-    updateThumbnail : async (req , res , next) => {
+    uploadPhotos : async (req , res , next) => {
         try {
-         const articleId = req.params.id
-         const result = await articleService.updateThumbnail(articleId, req.file);
-         res.send({
-             sucess: true,
-             result
-         })
+            console.log(req.file.path)
+            return req.file.path;
+            if (req.file) {
+                res.status(200).json({
+                    key: req.file.filename,
+                    photo_url: req.file.path,
+                });
+                console.log(photo_url)
+            } else {
+                res.status(500).json({ error: 'Failed to upload file' });
+            }
         } catch (error) {
-            res.send('error', error)
+            res.send(error)
         }
     },
 

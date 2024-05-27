@@ -9,5 +9,6 @@ router.use((req, res, next) => {
 
 router.use('/' , require('./home'))
 router.use('/category' , require('./category'))
+router.use('/contact' , require('./contact'))
 
 module.exports = router

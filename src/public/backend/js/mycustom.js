@@ -1,5 +1,26 @@
+const { json } = require("express")
+
 const categoryUrl = '/admin/category'
 const articleUrl = '/admin/article'
+const contactUrl = '/admin/contact'
+
+
+const handleFormSubmit = (event, id) => {
+    event.preventDefault()
+    const method = id? PUT : POST
+    const data = $('#submit-data-form').serialize();
+    $.$.ajax({
+        type: method,
+        url: `/admin/contact/form/${id}`,
+        data: data,
+        dataType: "json",
+        success: function (response) {
+            if(response.success){
+                window.location.href = "admin/contact"
+            }
+        }
+    });
+}
 
 const changeStatus = (url, id, status) => {
     let update_data = { id, status };
@@ -60,119 +81,12 @@ const previewFile = () =>{
 //     });
 // } 
 
-// const form = document.getElementById('submit-data-form');
-// if(form){
-//     form.addEventListener('submit', async function(e) {
-//         e.preventDefault();
-//         let form = $(e.target);
-//         let url = form.attr('action');
-//         let method = form.attr('method');
-//         let id = form.attr('data-id');
-//         let data = new FormData(form[0]); 
-//         let obj_data = {}
-//         console.log(data.getElementById )
-        
-//         for (let [key, value] of data.entries()) {
-//             obj_data[key] = value
-//         }
-//         console.log('obj_data', obj_data.thumbnail)
-   
-//         const response = await fetch(`${url}/form/${id}`, {
-//             method: method,
-//             body: form
-//         })
-//         const response_Data = await response.json();
-//         console.log(response_Data)
-// })
-// }
-
-// const submitForm = (event, url, id) => {
-//     event.preventDefault();
-//     let method = id ? 'PUT' : 'POST'
-//     const formData = new FormData(document.querySelector('#submit-data-form'));
-//     let  data = Object.fromEntries(formData.entries());
-
-//     if(data.thumbnail){
-//         data = formData
-//     }
-
-//     console.log('data', data)
-//     console.log('method', method)
-//     console.log('url', url)
-//     console.log('id', id)
-
-//    $.ajax({
-//     type: method,
-//     url: `${url}/form/${id}`,
-//     data: data,
-//     contentType: false,
-//     processData: false,
-//     dataType: "json",
-//     success: function (response) {
-//         if(response.success){
-//             window.location.href = url
-//             setTimeout(function(){
-//                 alertify.success('Update success')
-//             }, 1000);
-//         }else{
-//             alertify.error('Update failed, invalid form')
-//         }
-//     }
-//    });
-// }
-
-const submitCategoryForm = (event, url, id) =>{
-    event.preventDefault();
-    let method = id ? 'PUT' : 'POST'
-    const data = $('#submit-data-form').serialize();
-
-    $.ajax({
-        type: method,
-        url: `${url}/form/${id}`,
-        data: data,
-        dataType: "json",
-        success: function (response) {
-            if(response.success){
-                window.location.href = url
-                setTimeout(function(){
-                    alertify.success('Update success')
-                }, 1000);
-            }else{
-                alertify.error('Update failed, invalid form')
-            }
-        }
-    });
-}
-
-const submitArticleForm = (event, url, id) =>{
-    event.preventDefault();
-    let method = id ? 'PUT' : 'POST'
-    const formData = new FormData(document.querySelector('#submit-data-form'));
-
-    $.ajax({
-        type: method,
-        url: `${url}/form/${id}`,
-        data: formData,
-        contentType: false,
-        processData: false,
-        dataType: "json",
-        success: function (response) {
-            if(response.success){
-                window.location.href = url
-                setTimeout(function(){
-                    alertify.success('Update success')
-                }, 1000);
-            }else{
-                alertify.error('Update failed, invalid form')
-            }
-        }
-    });
-}
 
 $(document).ready(function () { 
     // active menu
     activeMenuOnClick('#category', categoryUrl);
     activeMenuOnClick('#article', articleUrl);
+    activeMenuOnClick('#contact', contactUrl);
     if ($('#description').length) {
         CKEDITOR.replace('description');
     }
@@ -195,5 +109,69 @@ $(document).ready(function () {
        );
     })
 
+    // Turn input element into a pond
+    //  FilePond.registerPlugin(FilePondPluginImagePreview);
+
+    //  const inputElement = document.querySelector('input[name="thumbnail"]');
+    //  const pond = FilePond.create(inputElement);
+    //  FilePond.setOptions({
+    //     server: {
+    //         url: '/admin/article/upload-photos',
+    //         timeout: 7000,
+    //         process: {
+    //             url: '/upload', // Specify the backend endpoint to handle file upload
+    //             method: 'POST',
+    //             withCredentials: false,
+    //             onload: (response) => response.key,
+    //             onerror: (response) => response.data,
+    //             ondata: (formData) => {
+    //                 console.log(JSON.stringify(formData));
+    //                 return formData;
+    //             },
+    //         },
+    //     },
+    // });
     
-})
+    // pond.on('processfile', (error, file) => {
+    //     if (error) {
+    //         console.error('File processing error:', error);
+    //     } else {
+    //         console.log('File processed:', file);
+    //         pond.processFile(file, file.serverId);
+    //     }
+    // });
+    //  pond.addFile('https://res.cloudinary.com/dzi76lgy2/image/upload/v1716543675/thumbnail/sovxgrjveg6f5mhu31ae.jpg'); // Add a file to the FilePond instance
+
+    //  pond.on('addfile', (error, file) => {
+    //      if (error) {
+    //          console.error('File add error:', error);
+    //      } else {
+    //          console.log('File added:', file.File);
+    //      }
+    //  });
+
+
+    //  FilePond.setOptions({
+    //      server: {
+    //          url: '/admin/article/upload-photos'
+    //  }})
+     
+
+    // $('.filepond').filepond({
+    //     allowMultiple: true,
+    // });
+    
+
+
+    // Set allowMultiple property to true
+    // $('.filepond').filepond('allowMultiple', false);
+
+    // $('.filepond')
+    // .filepond('addFile', 'http://res.cloudinary.com/dzi76lgy2/image/upload/v1716205523/thumbnail/thumbnail-1716205521015-577735266.jpg.jpg' )
+    // .then(function (file) {
+    //     console.log('file added', file.file);
+    //     //
+    // });
+
+
+})  

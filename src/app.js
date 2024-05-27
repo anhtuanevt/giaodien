@@ -1,36 +1,41 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-require('dotenv').config()
+require('dotenv').config();
 const expressLayouts = require("express-ejs-layouts");
+const flash = require('express-flash-notification');
 const cookieParser = require('cookie-parser');
-const flash = require('connect-flash');
+const session = require('express-session');
 
-
-const multer = require('multer');
-
-const db = require('./configs/db')
+const db = require('./configs/db');
 var indexRouter = require('./routes/index');
 
 var app = express();
-db.connect()
+db.connect();
 
 app.use(cookieParser());
+app.use(session({
+    secret: 'your_secret_key', // Add a secret key for session encoding
+    resave: false,             // Don't save session if unmodified
+    saveUninitialized: false,  // Don't create session until something stored
+    cookie: { maxAge: 60000 }
+}));
+app.use(flash(app));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(expressLayouts)
+app.use(expressLayouts);
 app.set("layout", "index");
 
 // app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
